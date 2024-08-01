@@ -1,0 +1,85 @@
+---
+name: Start OpenBSD Vagrant Box
+description: Allow running command-line programs via bash shell of OpenBSD VMs provisioned with Vagrant using the run keyword.
+
+inputs:
+  box:
+    default: generic/openbsd7
+    description: Vagrant Box
+    type: string
+  boot_timeout:
+    default: 1800
+    description: VM Boot Timeout
+    type: string
+  connect_timeout:
+    default: 30
+    description: VM SSH Connect Timeout
+    type: string
+  cpus:
+    default: 2
+    description: VM CPUs
+    options:
+      - 2
+      - 4
+      - 8
+    type: choice
+  memory:
+    default: 2048
+    description: VM Memory
+    options:
+      - 1024
+      - 2048
+      - 4096
+      - 8192
+    type: choice
+  pre_package_commands:
+    default: >-
+      find ${{ github.workspace }} -mindepth 1 -delete;
+      find ${{ runner.temp }} -mindepth 1 -delete;
+    description: Command(s) to run before packaging Vagrant Box (double quotation marks are not allowed)
+    type: string
+  provision_commands:
+    default: >-
+      pkg_add -Iv bash rsync--;
+      echo 'AcceptEnv *' >> /etc/ssh/sshd_config;
+      rcctl restart sshd;
+      mkdir -p ${{ github.workspace }};
+      chown vagrant:vagrant ${{ github.workspace }};
+      mkdir -p ${{ runner.temp }};
+      chown vagrant:vagrant ${{ runner.temp }};
+    description: Command(s) to run for provisioning (double quotation marks are not allowed)
+    type: string
+  save_box_to_cache:
+    description: Save Vagrant Box to GitHub Actions Cache
+    type: boolean
+  use_cached_box:
+    description: Use Vagrant Box from GitHub Actions Cache
+    type: boolean
+  vagrant_box_descriptor:
+    default: /tmp/packaged.box
+    description: Vagrant Box Descriptor <name, url, or path>
+    type: string
+  vagrant_ssh_username:
+    default: vagrant
+    description: SSH Username for `vagrant ssh`
+    type: string
+
+
+runs:
+  using: composite
+  steps:
+    - name: Start OpenBSD Vagrant Box
+      uses: hummeltech/vagrant-action@v1
+      with:
+        box: ${{ inputs.box }}
+        boot_timeout: ${{ inputs.boot_timeout }}
+        connect_timeout: ${{ inputs.connect_timeout }}
+        cpus: ${{ inputs.cpus }}
+        memory: ${{ inputs.memory }}
+        pre_package_commands: ${{ inputs.pre_package_commands }}
+        provision_commands: ${{ inputs.provision_commands }}
+        save_box_to_cache: ${{ inputs.save_box_to_cache }}
+        use_cached_box: ${{ inputs.use_cached_box }}
+        vagrant_box_descriptor: ${{ inputs.vagrant_box_descriptor }}
+        vagrant_ssh_username: ${{ inputs.vagrant_ssh_username }}
+

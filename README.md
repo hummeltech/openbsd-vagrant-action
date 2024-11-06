@@ -12,7 +12,7 @@ This action allows the running of command-line programs via the `bash` shell of 
 1. Provision a `OpenBSD VM` using the specified `box` (with 2 CPUs & 2GB of RAM)
     ```yaml
     - name: Provision VM
-      uses: hummeltech/openbsd-vagrant-action@v2
+      uses: hummeltech/openbsd-vagrant-action@v3
       with:
         box: generic/openbsd7
         cpus: 2

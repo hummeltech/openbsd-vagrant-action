@@ -71,8 +71,8 @@ jobs:
         working-directory: new_working_directory
 
   macOS:
-    name: macOS (${{ matrix.box }}) (${{ matrix.provider }})
-    runs-on: macos-13
+    name: ${{ matrix.runs-on }} (${{ matrix.box }}) (${{ matrix.provider }})
+    runs-on: ${{ matrix.runs-on }}
     strategy:
       matrix:
         box:
@@ -80,6 +80,8 @@ jobs:
         provider:
           - libvirt
           - virtualbox
+        runs-on:
+          - macos-13
       fail-fast: false
     steps:
       - name: Checkout code

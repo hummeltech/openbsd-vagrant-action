@@ -94,7 +94,7 @@ jobs:
         with:
           box: ${{ matrix.box }}
           cpus: ${{ env.CPUS }}
-          memory: 4096
+          provider: ${{ matrix.provider }}
 
       - name: Run Test (uname) (VM)
         run: |

@@ -5,13 +5,19 @@ on:
   push:
 
 jobs:
-  OpenBSD-On-Linux:
-    name: ${{ matrix.box }}
-    runs-on: ubuntu-latest
+  Ubuntu:
+    name: ${{ matrix.runs-on }} (${{ matrix.box }}) (${{ matrix.provider }})
+    runs-on: ${{ matrix.runs-on }}
     strategy:
       matrix:
         box:
           - generic/openbsd7
+        provider:
+          - libvirt
+          - virtualbox
+        runs-on:
+          - ubuntu-22.04
+          - ubuntu-latest
       fail-fast: false
     steps:
       - name: Checkout code
@@ -26,6 +32,7 @@ jobs:
         with:
           box: ${{ matrix.box }}
           cpus: ${{ env.CPUS }}
+          provider: ${{ matrix.provider }}
 
       - name: Run Test (uname) (VM)
         run: |
@@ -63,13 +70,16 @@ jobs:
         shell: bash --noprofile --norc -euo pipefail {0}
         working-directory: new_working_directory
 
-  OpenBSD-On-macOS:
-    name: ${{ matrix.box }}
+  macOS:
+    name: macOS (${{ matrix.box }}) (${{ matrix.provider }})
     runs-on: macos-13
     strategy:
       matrix:
         box:
           - generic/openbsd7
+        provider:
+          - libvirt
+          - virtualbox
       fail-fast: false
     steps:
       - name: Checkout code
